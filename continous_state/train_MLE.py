@@ -31,7 +31,6 @@ h_model = 256
 batch_size = 32
 learning_rate = 5e-5
 mem_size = 1000000
-exp = 'MLE'
 
 
 mem = Memory(env,mem_size,device) 
