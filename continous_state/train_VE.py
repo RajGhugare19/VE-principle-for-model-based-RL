@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 import torch.nn as nn
@@ -80,7 +81,13 @@ for i in range(total_iters):
         print("loss VE = ", running_loss/500)
         running_loss = 0
 
-VE_path =  'saved/VE' + str(rank_model) + "_" + str(value_width) + '.pt'
+
+current_directory = os.getcwd()
+final_directory = os.path.join(current_directory, r'saved')
+if not os.path.exists(final_directory):
+    os.makedirs(final_directory)
+
+VE_path = 'saved/VE' + str(rank_model) + "_" + str(value_width) + '.pt'
 torch.save(VE_model.state_dict(),VE_path)
 
 

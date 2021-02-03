@@ -61,6 +61,11 @@ model.eval()
 log = 'runs/dqn_' + exp + str(rank_model) + '_' + str(value_width) + '/'
 writer = SummaryWriter(log)
 
+current_directory = os.getcwd()
+final_directory = os.path.join(current_directory, r'saved')
+if not os.path.exists(final_directory):
+    os.makedirs(final_directory)
+
 batch_index = np.arange(batch_size)
 done = False
 s = env.reset()
@@ -127,6 +132,7 @@ for n in range(1,num_learn_steps+1):
         if avg > best_avg:
             #Saving best model
             best_avg = avg
-            path = 'saved/dqn/' + 'dqn' + exp + str(rank_model) + "_" + str(value_width) + '.pt'
-            torch.save(Q_model.state_dict(),path)
+            dqn_path = 'saved/dqn' + exp + str(rank_model) + "_" + str(value_width) + '.pt'
+            torch.save(Q_model.state_dict(),dqn_path)
         scores.pop(0)
+

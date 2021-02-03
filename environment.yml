@@ -1,0 +1,11 @@
+name: VE
+dependencies:
+  - pytorch
+  - numpy
+  - torchvision
+  - tensorboard
+  - scikit-learn
+  - matplotlib
+- pip
+  - pip:
+    - opencv-python

@@ -2,7 +2,6 @@ import numpy as np
 import torch
 from sklearn.cluster import KMeans
 
-device = torch.device("cuda:0")
 
 def row_stochastic(rows,cols):
     m = torch.nn.Softmax(dim=2)
@@ -15,7 +14,7 @@ def rank_constrained(F_D,F_K):
     return P
 
 class Memory():
-    def __init__(self,env,size):
+    def __init__(self,env,size,device):
         
         self.size = size
         self.env = env
@@ -40,10 +39,10 @@ class Memory():
         self.memory_count+=1 
     
     def to_tensor(self):
-        self.state_memory = torch.tensor(self.state_memory).to(device)
-        self.next_state_memory = torch.tensor(self.next_state_memory).to(device)
-        self.one_hot_action = torch.tensor(self.one_hot_action).to(device)
-        self.reward_memory = torch.tensor(self.reward_memory).to(device)
+        self.state_memory = torch.tensor(self.state_memory).to(self.device)
+        self.next_state_memory = torch.tensor(self.next_state_memory).to(self.device)
+        self.one_hot_action = torch.tensor(self.one_hot_action).to(self.device)
+        self.reward_memory = torch.tensor(self.reward_memory).to(self.device)
 
     def store_random(self):
         state = self.env.reset()
@@ -103,3 +102,47 @@ def get_kmeans(d,data):
         n_init=10,tol=1e-04)
     km.fit(data)
     return km
+
+def collect_traj(size,policy,P_es,R_es):
+    state = np.zeros(size,dtype=np.int)
+    next_state = np.zeros(size,dtype=np.int)
+    reward = np.zeros(size,dtype=np.int)
+    action = np.zeros(size,dtype=np.int)
+    term = np.zeros(size,dtype=np.int)
+    s = env.reset()
+    
+    #Storing on-policy data
+    for j in range(size):
+        
+        a = policy[s]
+        n_s,r,t = env.step(a)
+        n_s_hat = np.random.choice(state_list, 1, p=P_es[a,s])
+        #n_s_hat = np.argmax(P_es[a,s])
+        r_hat = R_es[s,a]
+        state[j] = s
+        action[j] = a
+        next_state[j] = n_s_hat
+        reward[j] = r_hat
+        term[j] = t
+        
+        if t:
+            s = env.reset()
+        else:
+            s = n_s
+    return state,next_state,reward,action,term
+
+def value_iteration(env,t,r,gamma=0.99,epsilon=0.01):
+    v = np.zeros(env.n_states)
+    v_new = np.zeros(env.n_states)
+    t = np.array(t.to('cpu').detach())
+    r = np.array(r.to('cpu').detach())
+    while True:
+        for s in range(env.n_states):
+            v_temp = np.zeros(env.n_actions)
+            for a in range(env.n_actions):
+                v_temp[a] = r[s,a] + gamma*np.dot(t[a,s,:],v) 
+            v_new[s] = np.max(v_temp)
+        if np.max(np.abs(v - v_new)) < epsilon:
+            break
+        v = np.copy(v_new)
+    return v

@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 import torch.nn as nn
@@ -70,6 +71,10 @@ for i in range(1,total_iters):
         print("lose MLE = ", running_loss/500)
         running_loss = 0
 
+current_directory = os.getcwd()
+final_directory = os.path.join(current_directory, r'saved')
+if not os.path.exists(final_directory):
+    os.makedirs(final_directory)
 
 MLE_path = 'saved/MLE' + str(rank_model) + "_" + str(value_width) + '.pt'
 torch.save(MLE_model.state_dict(),MLE_path)

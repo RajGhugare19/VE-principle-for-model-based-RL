@@ -8,7 +8,6 @@ from fourrooms import FourRooms
 from utils import Memory,random_determininstic_policies,row_stochastic,policy_eval,rank_constrained, value_iteration
 from arguments import get_args
 
-env = Catch()
 
 args = get_args('Polytype')
 rank = args.rank_model
@@ -35,7 +34,7 @@ total_iters = 1000000
 gamma = 0.99
 mem_size = 1000000
 
-mem = Memory(env,mem_size)
+mem = Memory(env,mem_size,device)
 mem.store_random()
 
 #Estimating reward and transition matrix
