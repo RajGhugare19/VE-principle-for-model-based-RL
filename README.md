@@ -26,6 +26,7 @@ This repository is the official implementation of [The Value Equivalence Princip
 - the dependencies are listed in the `requirements.yml` file
     ```
     conda env create -f environment.yml
+    ```
 
 ## Continous State
 ### Introduction
