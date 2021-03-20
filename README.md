@@ -2,7 +2,7 @@
 
 This repository is the official implementation of [The Value Equivalence Principle for Model based Reinforcement Learning](https://arxiv.org/abs/2011.03506)
 
-You can find our report on the reproducibility [here](https://openreview.net/pdf?id=IU5y7hIIZqS).
+You can find our report on the reproducibility [here](https://openreview.net/forum?id=IU5y7hIIZqS).
 
 ## Table of Contents
 - [The Value Equivalence Principle for Model Based Reinforcement Learning](#the-value-equivalence-principle-for-model-based-reinforcement-learning)
